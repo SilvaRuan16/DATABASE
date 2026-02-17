@@ -1,0 +1,50 @@
+CREATE DATABASE controllERP;
+USE controllERP;
+
+CREATE TABLE Products(
+    id VARCHAR(36) PRIMARY KEY NOT NULL,
+    code VARCHAR(20) UNIQUE NOT NULL,
+    name VARCHAR(70) NOT NULL,
+    description TEXT,
+    minPrice NUMERIC(9,2) NOT NULL,
+    price NUMERIC(9,2) NOT NULL,
+    acquisitionPrice NUMERIC(9,2) NOT NULL,
+    idTax INTEGER NOT NULL,
+    amount INTEGER NOT NULL,
+    idCategory INTEGER NOT NULL,
+    isActive VARCHAR(10) NOT NULL DEFAULT "ATIVO",
+    minProfit NUMERIC(9,2),
+    profit NUMERIC(9,2)
+);
+
+CREATE TABLE Taxs(
+    id INTEGER AUTO_INCREMENT PRIMARY KEY,
+    tax NUMERIC(5,2) NOT NULL 
+);
+
+CREATE TABLE Categories(
+    id INTEGER AUTO_INCREMENT PRIMARY KEY,
+    category VARCHAR(50) UNIQUE NOT NULL
+);
+
+
+ALTER TABLE Products ADD FOREIGN KEY (idTax) REFERENCES Taxs (id);
+ALTER TABLE Products ADD FOREIGN KEY (idCategory) REFERENCES Categories (id);
+
+
+SELECT * FROM Products;
+SELECT * FROM Taxs;
+SELECT * FROM Categories;
+SELECT p.code, p.name, p.description, p.minPrice, p.price, p.amount, p.isActive, p.idCategory, p.idTax, c.id, c.category, t.id, t.tax FROM Products p INNER JOIN Categories c ON p.idCategory = c.id INNER JOIN Taxs t ON p.idTax = t.id;
+
+
+INSERT INTO Taxs (tax) VALUES (12.4);
+INSERT INTO Categories (category) VALUES ('Roupas'), ('Ferramentas'), ('Utensilios');
+INSERT INTO Products (id, code, name, description, minPrice, price, acquisitionPrice, idTax, amount, idCategory, isActive, minProfit, profit) VALUES ( 'AS2498XM12', '2930CE', 'Camiseta', 'Camiseta Polo tamanho GG', 30.98, 55.90, 19.00, 1, 29, 1, 'Ativo', 0.0, 0.0
+ );
+
+
+UPDATE Products p SET name = 'Camiseta Polo', price = 62.75 WHERE code = '2930CE';
+
+
+DELETE FROM Products p WHERE p.code = '2930CE';
